@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!------------Fonts------------------------------------------------->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap" rel="stylesheet">
+  <title>إذاعات القرآن الكريم </title>
+  <style>
+    body {
+        font-family: 'Cairo', sans-serif;
+        text-align: center;
+        background:url("https://st4.depositphotos.com/4257631/19742/v/450/depositphotos_197423148-stock-illustration-morocco-seamless-light-grey-pattern.jpg");
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 90vh;
+    }
+    .player {
+      margin-bottom: 20px;
+      
+    }
+    audio::-webkit-media-controls-panel {
+      background-color: #2fa74d;
+    }
+    audio::-webkit-media-controls-mute-button {
+      background-color: #013604;
+      border-radius: 50%;
+    }
+    select {
+      font-family: 'Cairo', sans-serif;
+      padding: 7px;
+      border: 1px solid #5e6b61;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 50%;
+      margin-top: 10px;
+      width : 150px; height : 150px;
+      border: none;
+    -moz-border-radius : 75px;
+    -webkit-border-radius : 75px;
+    border-radius : 75px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <h3>إذاعات للبث الحي  </h3>
+    <p>   للمصحف القرآن الكريم بروايات مختلفة لأشهر القراء  </p>
+    <div class="player">
+      <audio controls id="audioPlayer">
+        <source src="" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+      <div>
+        <select id="categorySelect">
+            <option value="category0">إختيار</option>
+            <option value="category1"> ورش عن نافع</option>
+            <option value="category2"> قالون عن نافع</option>
+            <option value="category3"> حفص عن عاصم</option>
+            <option value="category4"> الدوري عن أبي عمرو</option>
+            <option value="category5"> السوسي عن أبي عمرو</option>
+            <option value="category6"> البزي وقنبل عن ابن كثير</option>
+            <option value="category7"> الدوري عن الكسائي</option>
+            <option value="category8"> ابن ذكوان عن ابن عامر</option>
+            <option value="category9"> قراءة يعقوب الحضرمي بروايتي رويس وروح</option>
+            <option value="category10"> خلف عن حمزة</option>
+            
+        </select>
+      </div>
+      <div>
+        <select id="readerSelect">
+          <!-- سيتم تعبئة القائمة الثانية تلقائيا بناء على الصنف المختار -->
+        </select>
+      </div>
+    </div>
+    <div class="info">
+      <h3 id="selectedCategory"></h3>
+      <h4 id="selectedReader"></h4>
+      <img id="readerImage" src="https://www.tunisie-radio.com/sites/default/files/radio/radio-quran-dh-lqran.jpg" alt="">
+    </div>
+
+  </div>
+  <footer>
+    <p>تم جمع و ترتيب هذه الروابط بتاريخ الأول من شهر  شوال لسنة 1445</p>
+  </footer>
+  <script>
+    const categorySelect = document.getElementById('categorySelect');
+    const readerSelect = document.getElementById('readerSelect');
+    const selectedCategory = document.getElementById('selectedCategory');
+    const selectedReader = document.getElementById('selectedReader');
+    const readerImage = document.getElementById('readerImage');
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    const readersData = {
+      category1: [
+        { name: ' ابراهيم الدوسري ' , audioUrl: 'https://backup.qurango.net/radio/ibrahim_aldosari ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85%20%D8%A7%D9%84%D8%AF%D9%88%D8%B3%D8%B1%D9%8A.jpg' },
+        { name: ' عمر القزابري ' , audioUrl: 'https://backup.qurango.net/radio/omar_alqazabri ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%B9%D9%85%D8%B1%20%D8%A7%D9%84%D9%82%D8%B2%D8%A7%D8%A8%D8%B1%D9%8A.jpg' },
+        { name: ' محمد عبدالكريم ' , audioUrl: 'https://backup.qurango.net/radio/mohammad_abdullkarem_alasbahani ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D9%83%D8%B1%D9%8A%D9%85.jpg' },
+        { name: ' محمود خليل الحصري ' , audioUrl: 'https://backup.qurango.net/radio/mahmoud_khalil_alhussary_warsh ' , imageUrl: 'https://i.pinimg.com/564x/40/82/8a/40828a6b62dafc099f52f2c8758df80a.jpg' },
+        { name: ' العيون الكوشي ' , audioUrl: 'https://backup.qurango.net/radio/aloyoon_alkoshi ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%A7%D9%84%D8%B9%D9%8A%D9%88%D9%86%20%D8%A7%D9%84%D9%83%D9%88%D8%B4%D9%8A.jpg' },
+        { name: ' القارئ ياسين ' , audioUrl: 'https://backup.qurango.net/radio/alqaria_yassen ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%8A%D8%A7%D8%B3%D9%8A%D9%86%20%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%D9%8A.jpg' },
+        { name: ' عبدالباسط عبدالصمد ' , audioUrl: 'https://backup.qurango.net/radio/abdulbasit_abdulsamad_warsh ' , imageUrl: 'data:image/jpeg;base64,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' },
+        { name: '  عبدالعزيز سحيم ' , audioUrl: 'https://backup.qurango.net/radio/a_sheim ' , imageUrl: 'https://i.pinimg.com/564x/a7/37/47/a73747375897de4897da372a0fd921a0.jpg' },
+
+      ],
+
+      category2: [
+        { name: ' أحمد خضر الطرابلسي ' , audioUrl: 'https://backup.qurango.net/radio/ahmad_khader_altarabulsi ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%A3%D8%AD%D9%85%D8%AF%20%D8%AE%D8%B6%D8%B1%20%D8%A7%D9%84%D8%B7%D8%B1%D8%A7%D8%A8%D9%84%D8%B3%D9%8A.jpg' },
+        { name: ' الدوكالي محمد العالم ' , audioUrl: 'https://backup.qurango.net/radio/addokali_mohammad_alalim ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%A7%D9%84%D8%AF%D9%88%D9%83%D8%A7%D9%84%D9%8A%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85.jpg' },
+        { name: ' طارق عبدالغني دعوب ' , audioUrl: 'https://backup.qurango.net/radio/tareq_abdulgani_daawob ' , imageUrl: 'https://static.suratmp3.com/pics/reciters/thumbs/88_600_600.jpg' },
+        { name: ' وليد النائحي ' , audioUrl: 'https://backup.qurango.net/radio/waleed_alnaehi ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%88%D9%84%D9%8A%D8%AF%20%D8%A7%D9%84%D9%86%D8%A7%D8%A6%D8%AD%D9%8A.jpg' },
+        { name: ' محمد أبوسنينة ' , audioUrl: 'https://backup.qurango.net/radio/sneineh ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%85%D8%AD%D9%85%D8%AF%20%D8%A3%D8%A8%D9%88%20%D8%B3%D9%86%D9%8A%D9%86%D8%A9.jpg' },
+        { name: ' علي الحذيفي ' , audioUrl: 'https://backup.qurango.net/radio/ali_alhuthaifi_qalon ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%B9%D9%84%D9%8A%20%D8%A7%D9%84%D8%AD%D8%B0%D9%8A%D9%81%D9%8A.jpg' },
+        { name: ' محمد الأمين قنيوة ' , audioUrl: 'https://backup.qurango.net/radio/qeniwa ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D9%86%20%D9%85%D8%AD%D9%85%D8%AF%20%D9%82%D9%86%D9%8A%D9%88%D9%87.jpg' },
+
+      ],
+
+      category3: [
+        { name: ' أحمد الطرابلسي ' , audioUrl: 'https://backup.qurango.net/radio/ahmed_altrabulsi ' , imageUrl: 'https://th.bing.com/th/id/R.6ce4c0c2b64e397ff94e56ebbba5325b?rik=2aclKFKxS%2b0gqw&pid=ImgRaw&r=0' },
+        { name: ' أحمد عامر ' , audioUrl: 'https://backup.qurango.net/radio/ahmed_amer ' , imageUrl: 'https://th.bing.com/th/id/OIP.dYcWJt84RxD4Av0XAlx8JwHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' جمعان العصيمي ' , audioUrl: 'https://backup.qurango.net/radio/jamaan_alosaimi ' , imageUrl: 'https://th.bing.com/th/id/OIP.7gXUm8W9TfjxBRY_t75PpgHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' حاتم فريد الواعر ' , audioUrl: 'https://backup.qurango.net/radio/hatem_fareed_alwaer ' , imageUrl: 'https://th.bing.com/th/id/OIP.RFOUUEXQKO6vB8NiKegNvAHaGo?rs=1&pid=ImgDetMain' },
+        { name: ' خالد المهنا ' , audioUrl: 'https://backup.qurango.net/radio/khalid_almohana ' , imageUrl: 'https://th.bing.com/th/id/R.e9af88b6a8186ba6acb9c0a0e9de5f99?rik=ftX8d%2fkiLPt%2fRw&pid=ImgRaw&r=0' },
+        { name: ' عادل الكلباني ' , audioUrl: 'https://backup.qurango.net/radio/adel_alkhalbany ' , imageUrl: 'https://th.bing.com/th/id/R.3a0640e3cfdbe12b10a2417c563291fa?rik=vznMblvnzzZRbQ&pid=ImgRaw&r=0' },
+        { name: ' عبدالرحمن الماجد ' , audioUrl: 'https://backup.qurango.net/radio/abdulrahman_almajed ' , imageUrl: 'https://th.bing.com/th/id/R.9e0f7061bbfca98a99c0286889f95deb?rik=uVhVr%2fgGe2JbGw&pid=ImgRaw&r=0' },
+        { name: ' عبدالله الكندري ' , audioUrl: 'https://backup.qurango.net/radio/abdullah_alkandari ' , imageUrl: 'https://th.bing.com/th/id/OIP.xsR__lDOTIE49-_-xOTpuwHaEK?rs=1&pid=ImgDetMain' },
+        { name: ' علي جابر ' , audioUrl: 'https://backup.qurango.net/radio/ali_jaber ' , imageUrl: 'https://th.bing.com/th/id/OIP.TjnDHg6pNJkL6_uK4V-13wHaJ6?rs=1&pid=ImgDetMain' },
+        { name: ' علي حجاج السويسي ' , audioUrl: 'https://backup.qurango.net/radio/ali_hajjaj_alsouasi ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%B9%D9%84%D9%8A%20%D8%AD%D8%AC%D8%A7%D8%AC%20%D8%A7%D9%84%D8%B3%D9%88%D9%8A%D8%B3%D9%8A.jpg' },
+        { name: ' عماد زهير حافظ ' , audioUrl: 'https://backup.qurango.net/radio/emad_hafez ' , imageUrl: 'https://th.bing.com/th/id/OIP.w6e9wHQDUWQmBeLaycHnMQHaHz?rs=1&pid=ImgDetMain' },
+        { name: ' فارس عباد ' , audioUrl: 'https://backup.qurango.net/radio/fares_abbad ' , imageUrl: 'https://i.ytimg.com/vi/rC3emm576jc/hqdefault.jpg' },
+        { name: ' ماهر المعيقلي ' , audioUrl: 'https://backup.qurango.net/radio/maher ' , imageUrl: 'https://th.bing.com/th/id/R.47a4dc19260a2cc8ef48000a8ad2910a?rik=HvxB%2f2ooYkL5kQ&riu=http%3a%2f%2fquran.com.kw%2fwp-content%2fuploads%2fmaher-almoeqly.jpg&ehk=PbkWIcoRpp0HTRZb4hNqQT9vzfBbXBywwGzCOAwZgu8%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' ماهر شخاشيرو ' , audioUrl: 'https://backup.qurango.net/radio/maher_shakhashero ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%85%D8%A7%D9%87%D8%B1%20%D8%B4%D8%AE%D8%A7%D8%B4%D9%8A%D8%B1%D9%88.jpg' },
+        { name: ' محمد أيوب ' , audioUrl: 'https://backup.qurango.net/radio/mohammed_ayyub ' , imageUrl: 'https://th.bing.com/th/id/OIP.-Dy6IHRvNZez2RN2FcpuxQHaEt?rs=1&pid=ImgDetMain' },
+        { name: ' محمد الطبلاوي ' , audioUrl: 'https://backup.qurango.net/radio/mohammad_altablaway ' , imageUrl: 'https://th.bing.com/th/id/OIP.EWBqTJbnDGX0zCuAMzRZlgHaFj?rs=1&pid=ImgDetMain' },
+        { name: ' محمد اللحيدان ' , audioUrl: 'https://backup.qurango.net/radio/mohammed_allohaidan ' , imageUrl: 'https://th.bing.com/th/id/OIP.aJy_MJade3CEUJ3aZgMeMQHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' محمد جبريل ' , audioUrl: 'https://backup.qurango.net/radio/mohammed_jibreel ' , imageUrl: 'https://th.bing.com/th/id/OIP.hLNofdvePrrhgFsd1TGkxwHaE7?rs=1&pid=ImgDetMain' },
+        { name: ' محمد رشاد الشريف ' , audioUrl: 'https://backup.qurango.net/radio/mohammad_rashad_alshareef ' , imageUrl: 'https://th.bing.com/th/id/R.6c212555dd4010a12c8df3b85cbcf97d?rik=kJEH5%2bmd7MDcDQ&pid=ImgRaw&r=0' },
+        { name: ' محمد صالح عالم شاه ' , audioUrl: 'https://backup.qurango.net/radio/mohammad_saleh_alim_shah ' , imageUrl: 'https://th.bing.com/th/id/R.29f0da1d44682af56d2e2675d61782d4?rik=umg%2f%2bP%2bMM3gf2w&riu=http%3a%2f%2fwww.assabile.com%2fmedia%2fperson%2f200x256%2fmohamed-saleh-alem-shah.png&ehk=Xin%2fYJoDMRr3Vtv7E2qqvlY0GI68i9%2b1KOsvqBhVIcU%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' محمد صديق المنشاوي ' , audioUrl: 'https://backup.qurango.net/radio/mohammed_siddiq_alminshawi ' , imageUrl: 'https://th.bing.com/th/id/R.62cc3ffcfbf5e4a6f8ada44770732431?rik=FKb6w2y6WuyL4Q&pid=ImgRaw&r=0' },
+        { name: ' محمد عبدالكريم ' , audioUrl: 'https://backup.qurango.net/radio/mohammad_abdullkarem ' , imageUrl: 'https://th.bing.com/th/id/OIP.lkDVDRsS_2Uq_UUzdvMlggHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' محمود الرفاعي ' , audioUrl: 'https://backup.qurango.net/radio/mahmood_al_rifai ' , imageUrl: 'https://th.bing.com/th/id/OIP.q-MCoBPg1LPYCMSdb93SNAHaE7?rs=1&pid=ImgDetMain' },
+        { name: ' محمود خليل الحصري ' , audioUrl: 'https://backup.qurango.net/radio/mahmoud_khalil_alhussary ' , imageUrl: 'https://th.bing.com/th/id/OIP.O_WmmysrEha-Hnw0zB1ydAHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' محمود علي البنا ' , audioUrl: 'https://backup.qurango.net/radio/mahmoud_ali__albanna ' , imageUrl: 'https://th.bing.com/th/id/R.1aab808973a87d80a5d8643eb7794251?rik=dhHSjv5rJjQMgg&pid=ImgRaw&r=0' },
+        { name: ' مشاري العفاسي ' , audioUrl: 'https://backup.qurango.net/radio/mishary_alafasi ' , imageUrl: 'https://th.bing.com/th/id/OIP.SHpvbNpkO7jdoDSOHeSWZwHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' مصطفى إسماعيل ' , audioUrl: 'https://backup.qurango.net/radio/mustafa_ismail ' , imageUrl: 'https://www.elmstba.com/wp-content/uploads/%D9%85%D8%B5%D8%B7%D9%81%D9%89-%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84.jpg' },
+        { name: ' مصطفى اللاهوني ' , audioUrl: 'https://backup.qurango.net/radio/mustafa_allahoni ' , imageUrl: 'https://ar.islamway.net/uploads/authors/mustafa-ismael.jpg' },
+        { name: ' مصطفى رعد العزاوي ' , audioUrl: 'https://backup.qurango.net/radio/mustafa_raad_alazawy ' , imageUrl: 'https://i.pinimg.com/564x/86/ec/5d/86ec5dd9530f4b256bac5d62d4ff22ac.jpg' },
+        { name: ' معيض الحارثي ' , audioUrl: 'https://backup.qurango.net/radio/moeedh_alharthi ' , imageUrl: 'https://ar.assabile.com/media/person/200x256/moeedh-alharthi.png' },
+        { name: ' مفتاح السلطني ' , audioUrl: 'https://backup.qurango.net/radio/muftah_alsaltany ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%84%D8%B7%D9%86%D9%8A.jpg' },
+        { name: ' موسى بلال ' , audioUrl: 'https://backup.qurango.net/radio/mousa_bilal ' , imageUrl: 'https://th.bing.com/th/id/OIP.iaHbwmS33m1wNFMwWKmy6gHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' ناصر القطامي ' , audioUrl: 'https://backup.qurango.net/radio/nasser_alqatami ' , imageUrl: 'https://th.bing.com/th/id/OIP.x8zJyYwLTNy5ud5BwnmP0QHaFi?rs=1&pid=ImgDetMain' },
+        { name: ' نبيل الرفاعي ' , audioUrl: 'https://backup.qurango.net/radio/nabil_al_rifay ' , imageUrl: 'https://i.ytimg.com/vi/KGqw7UaU3mA/hqdefault.jpg' },
+        { name: ' نعمة الحسان ' , audioUrl: 'https://backup.qurango.net/radio/neamah_alhassan ' , imageUrl: 'https://th.bing.com/th/id/OIP.xlcqOO7w4H8-bf51dZf4RgHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' هاني الرفاعي ' , audioUrl: 'https://backup.qurango.net/radio/hani_arrifai ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%87%D8%A7%D9%86%D9%8A%20%D8%A7%D9%84%D8%B1%D9%81%D8%A7%D8%B9%D9%8A.jpg' },
+        { name: ' ياسر الدوسري ' , audioUrl: 'https://backup.qurango.net/radio/yasser_aldosari ' , imageUrl: 'https://th.bing.com/th/id/R.b106a498b1a55a2d4f6a9eba55acaa75?rik=zTZiGwLwOq3z7Q&pid=ImgRaw&r=0&sres=1&sresct=1' },
+        { name: ' ياسر القرشي ' , audioUrl: 'https://backup.qurango.net/radio/yasser_alqurashi ' , imageUrl: 'https://th.bing.com/th/id/R.697550839ea01237fe58bc1248b0f55d?rik=jCFA1Dtxl3Tbow&pid=ImgRaw&r=0' },
+        { name: ' يحيى حوا ' , audioUrl: 'https://backup.qurango.net/radio/yahya_hawwa ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%8A%D8%AD%D9%8A%D9%89%20%D8%AD%D9%88%D8%A7.jpg' },
+        { name: ' يوسف الشويعي ' , audioUrl: 'https://backup.qurango.net/radio/yousef_alshoaey ' , imageUrl: 'https://th.bing.com/th/id/R.f7a073924e4b277d946fe985a02ebcfe?rik=HneH8U1p15PQ8A&pid=ImgRaw&r=0' },
+        { name: ' يوسف بن نوح أحمد ' , audioUrl: 'https://backup.qurango.net/radio/yousef_bin_noah_ahmad ' , imageUrl: 'https://www.yna-quran.com/images/yna-quran.com.pic.png' },
+        { name: ' أحمد الحواشي ' , audioUrl: 'https://backup.qurango.net/radio/ahmad_alhawashi ' , imageUrl: 'https://th.bing.com/th/id/R.18c5f78065ff56bad4f4359047b34a9f?rik=R7GsqBST6atNUw&riu=http%3a%2f%2fupload.wikimedia.org%2fwikipedia%2fcommons%2fc%2fcd%2fAlhawashi.jpg&ehk=JN001vlnUmZ%2bhkq8r8ScdV6a0ilD%2fDy1qGS2bXXngqQ%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' أحمد العجمي ' , audioUrl: 'https://backup.qurango.net/radio/ahmad_alajmy ' , imageUrl: 'https://th.bing.com/th/id/R.8e37ea0900e98969cb7f1235fd9b786e?rik=K%2fNJ0FmTPh4bGA&riu=http%3a%2f%2far.assabile.com%2fmedia%2fphoto%2ffull_size%2fahmed-al-ajmi-1124.jpg&ehk=LDmeaPQYpGT%2b8ygvXy3Tzgft%2boRC8Se9l4FL3CgIgkc%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' أحمد خليل شاهين ' , audioUrl: 'https://backup.qurango.net/radio/ahmad_shaheen ' , imageUrl: 'https://th.bing.com/th/id/R.b4c1ac9668f2c6621d14a49e237c48d9?rik=t8rGY%2by1km5OmA&pid=ImgRaw&r=0' },
+        { name: ' أحمد ديبان ' , audioUrl: 'https://backup.qurango.net/radio/ahmad_deban ' , imageUrl: 'https://th.bing.com/th/id/OIP.uXjUMmYW2Gq7Z4fcgqa55QHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' أحمد صابر ' , audioUrl: 'https://backup.qurango.net/radio/ahmad_saber ' , imageUrl: 'https://th.bing.com/th/id/R.a7f2f380ecf463ca84157e1dcae5d480?rik=%2f3FWL%2b%2fPv2DmMQ&pid=ImgRaw&r=0' },
+        { name: ' أحمد نعينع ' , audioUrl: 'https://backup.qurango.net/radio/ahmad_nauina ' , imageUrl: 'https://th.bing.com/th/id/OIP.jKp5n7wLdo_JcTpnoGi-TgAAAA?rs=1&pid=ImgDetMain' },
+        { name: ' أكرم العلاقمي ' , audioUrl: 'https://backup.qurango.net/radio/akram_alalaqmi ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%A3%D9%83%D8%B1%D9%85%20%D8%A7%D9%84%D8%B9%D9%84%D8%A7%D9%82%D9%85%D9%8A.jpg' },
+        { name: ' إبراهيم الأخضر ' , audioUrl: 'https://backup.qurango.net/radio/ibrahim_alakdar ' , imageUrl: 'https://i.pinimg.com/originals/06/a3/9f/06a39fbfe9c6944f1e3e4467b8f9426a.jpg' },
+        { name: ' إدريس أبكر ' , audioUrl: 'https://backup.qurango.net/radio/idrees_abkr ' , imageUrl: 'https://i.ytimg.com/vi/cHHQ_jkp0hk/maxresdefault.jpg' },
+        { name: ' الزين محمد أحمد ' , audioUrl: 'https://backup.qurango.net/radio/alzain_mohammad_ahmad ' , imageUrl: 'https://i.ytimg.com/vi/YHdZTSG2fKs/hqdefault.jpg' },
+        { name: ' بندر بليلة ' , audioUrl: 'https://backup.qurango.net/radio/bandar_balilah ' , imageUrl: 'https://th.bing.com/th/id/OIP.6utAitd9jc1VxaBNKtWAqgHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' توفيق الصايغ ' , audioUrl: 'https://backup.qurango.net/radio/tawfeeq_assayegh ' , imageUrl: 'https://quran.com.kw/wp-content/uploads/tawfiq-alsaigh.jpg' },
+        { name: ' جمال شاكر عبدالله ' , audioUrl: 'https://backup.qurango.net/radio/jamal_shaker_abdullah ' , imageUrl: 'https://th.bing.com/th/id/OIP.No2BMgfeyW1jlpoa8GxgJQHaJe?rs=1&pid=ImgDetMain' },
+        { name: ' خالد الجليل ' , audioUrl: 'https://backup.qurango.net/radio/khalid_aljileel ' , imageUrl: 'https://th.bing.com/th/id/R.15eabcd00b60a2761a1a2b8815055c34?rik=DyD5fzH8fpbFmQ&pid=ImgRaw&r=0' },
+        { name: ' خالد القحطاني ' , audioUrl: 'https://backup.qurango.net/radio/khaled_alqahtani ' , imageUrl: 'https://th.bing.com/th/id/OIP.HEW9XB4-onj6zDgzCwzTvwHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' خالد عبدالكافي ' , audioUrl: 'https://backup.qurango.net/radio/khalid_abdulkafi ' , imageUrl: 'https://th.bing.com/th/id/OIP.2eCmIAEALxELDWe169wC1AHaGI?rs=1&pid=ImgDetMain' },
+        { name: ' خليفة الطنيجي ' , audioUrl: 'https://backup.qurango.net/radio/khalifa_altunaiji ' , imageUrl: 'https://th.bing.com/th/id/R.684bec597fc4070e36c79e33c9edf683?rik=alegdzGFdY8HIw&pid=ImgRaw&r=0' },
+        { name: ' زكي داغستاني ' , audioUrl: 'https://backup.qurango.net/radio/zaki_daghistani ' , imageUrl: 'https://th.bing.com/th/id/R.8a2a0d8d1272837503d0dafa4387305b?rik=u2lx7%2bR19SouFQ&riu=http%3a%2f%2far.assabile.com%2fmedia%2fphoto%2ffull_size%2fzaki-daghistani-173.jpg&ehk=eFQrkKA5yVJWe5HB781%2bAE6m8n10S5tvmU%2bsfb4Gb9c%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' سعد الغامدي ' , audioUrl: 'https://backup.qurango.net/radio/saad_alghamdi ' , imageUrl: 'https://th.bing.com/th/id/R.51b60aeed1d771d6d351d8359169668b?rik=mHF0dIetSd6fjw&pid=ImgRaw&r=0' },
+        { name: ' سعود الشريم ' , audioUrl: 'https://backup.qurango.net/radio/saud_alshuraim ' , imageUrl: 'https://th.bing.com/th/id/OIP.lFmk1p06dfiUaxce1z7QdgHaHJ?rs=1&pid=ImgDetMain' },
+        { name: ' سهل ياسين ' , audioUrl: 'https://backup.qurango.net/radio/sahl_yassin ' , imageUrl: 'https://th.bing.com/th/id/R.03775233ea1024afbd2247dd26fae089?rik=aq8PQX5L%2bNI%2b9g&riu=http%3a%2f%2far.assabile.com%2fmedia%2fperson%2f200x256%2fsahl-yassin.png&ehk=RW%2b2dBk079ZEbbe8iJuAlXKa4WcXc9S7G%2flrMMOuQJw%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' سيد رمضان ' , audioUrl: 'https://backup.qurango.net/radio/sayeed_ramadan ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%B3%D9%8A%D8%AF%20%D8%B1%D9%85%D8%B6%D8%A7%D9%86.jpg' },
+        { name: ' شيخ أبو بكر الشاطري ' , audioUrl: 'https://backup.qurango.net/radio/shaik_abu_bakr_al_shatri ' , imageUrl: 'https://th.bing.com/th/id/OIP.0eN0zzUfQli5Lte2hA5HYwHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' شيرزاد عبدالرحمن طاهر ' , audioUrl: 'https://backup.qurango.net/radio/shirazad_taher ' , imageUrl: 'https://ar.assabile.com/media/person/200x256/shirazad-taher.png' },
+        { name: ' صابر عبدالحكم ' , audioUrl: 'https://backup.qurango.net/radio/saber_abdulhakm ' , imageUrl: 'https://th.bing.com/th/id/OIP.74S64NnshUUIK8J-u02MugAAAA?rs=1&pid=ImgDetMain' },
+        { name: ' صلاح البدير ' , audioUrl: 'https://backup.qurango.net/radio/salah_albudair ' , imageUrl: 'https://th.bing.com/th/id/R.7785cdd15c38735017cbc260658b0246?rik=HIr6y1N8b9g7tg&riu=http%3a%2f%2far.assabile.com%2fmedia%2fperson%2f200x256%2fsalah-al-budair.png&ehk=51f1waZlZ87b2JgwPwYWvvU0hGv%2fLBBwAG9nPtPpNCg%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' صلاح الهاشم ' , audioUrl: 'https://backup.qurango.net/radio/salah_alhashim ' , imageUrl: 'https://th.bing.com/th/id/R.0fcd67e441fa340d7ee9810ec13b6083?rik=%2byyQafA7FsWRyg&riu=http%3a%2f%2fwww.ashefaa.com%2fa3lam%2fshekh%2fal-hashem-3.jpg&ehk=3%2boM33FAGsqoZjoZY4e%2bQ6XhrwNDw4k55tsrtz%2fZIAw%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' صلاح بو خاطر ' , audioUrl: 'https://backup.qurango.net/radio/slaah_bukhatir ' , imageUrl: 'https://th.bing.com/th/id/R.5093fc30659a21484236113884a75730?rik=fOyDYnfDScNTtQ&pid=ImgRaw&r=0' },
+        { name: ' عادل ريان ' , audioUrl: 'https://backup.qurango.net/radio/adel_ryyan ' , imageUrl: 'https://th.bing.com/th/id/R.9f731ba6d42359ff6e64d30757629c00?rik=UiOpu%2fAIi2dM%2bg&riu=http%3a%2f%2far.assabile.com%2fmedia%2fperson%2f200x256%2fadel-rayane.png&ehk=xg9%2fmY%2bINunC8tEuZQoavgl9xfb1d%2b%2bW5BgfXHDMjXI%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' عبدالبارئ الثبيتي ' , audioUrl: 'https://backup.qurango.net/radio/abdelbari_altoubayti ' , imageUrl: 'https://th.bing.com/th/id/OIP.mgcLBqbFt7AUCcxTgEjAywHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالبارئ محمد ' , audioUrl: 'https://backup.qurango.net/radio/abdulbari_mohammad ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%A8%D8%A7%D8%B1%D8%A6%20%D9%85%D8%AD%D9%85%D8%AF.jpg' },
+        { name: ' عبدالباسط عبدالصمد ' , audioUrl: 'https://backup.qurango.net/radio/abdulbasit_abdulsamad ' , imageUrl: 'https://th.bing.com/th/id/OIP.krhi8nu0oOUe1C0wzBIAWAHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالرحمن السديس ' , audioUrl: 'https://backup.qurango.net/radio/abdulrahman_alsudaes ' , imageUrl: 'https://th.bing.com/th/id/OIP.ggTC_9ZIx3JmgHEnBn7x4wHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالرحمن الشحات ' , audioUrl: 'https://backup.qurango.net/radio/a_alshahhat ' , imageUrl: 'https://th.bing.com/th/id/OIP.v_QMfDdHGnlIivqs7LDjjwHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالعزيز الأحمد ' , audioUrl: 'https://backup.qurango.net/radio/abdul_aziz_alahmad ' , imageUrl: 'https://th.bing.com/th/id/OIP.cTc5k5edE6Ojj_rnfKJM-gHaEK?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالله الخلف ' , audioUrl: 'https://backup.qurango.net/radio/abdullah_alkhalaf ' , imageUrl: 'https://i1.sndcdn.com/artworks-000088017961-nbcoc3-t500x500.jpg' },
+        { name: ' عبدالله المطرود ' , audioUrl: 'https://backup.qurango.net/radio/abdullah_almattrod ' , imageUrl: 'https://i.pinimg.com/564x/de/bf/79/debf7908b0d379f49d952989f9bc9be7.jpg' },
+        { name: ' عبدالله الموسى ' , audioUrl: 'https://backup.qurango.net/radio/abdullah_almousa ' , imageUrl: 'https://th.bing.com/th/id/OIP.27dc52j5H_WJWHwEY4bA-QHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالله بصفر ' , audioUrl: 'https://backup.qurango.net/radio/abdullah_basfer ' , imageUrl: 'https://th.bing.com/th/id/R.ea60c9ffb69e45324c01fee42cf43794?rik=4bEouBdq%2fQUxlA&riu=http%3a%2f%2fquran.com.kw%2fwp-content%2fuploads%2fabdullah-basfar.jpg&ehk=zq70Y32FToYyQLevu4zbUzEXH7zwUiCiv964Ur%2bwl9U%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' عبدالله خياط ' , audioUrl: 'https://backup.qurango.net/radio/abdullah_khayyat ' , imageUrl: 'https://th.bing.com/th/id/OIP.BvYu_Tqw2L-220QxWQLWFgAAAA?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالله عواد الجهني ' , audioUrl: 'https://backup.qurango.net/radio/abdullah_aljohany ' , imageUrl: 'https://th.bing.com/th/id/OIP.KM83XRhfkkEJM2bd87B6kQHaHa?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالمحسن الحارثي ' , audioUrl: 'https://backup.qurango.net/radio/abdulmohsin_alharthy ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D9%85%D8%AD%D8%B3%D9%86%20%D8%A7%D9%84%D8%AD%D8%A7%D8%B1%D8%AB%D9%8A.jpg' },
+        { name: ' عبدالمحسن العبيكان ' , audioUrl: 'https://backup.qurango.net/radio/abdulmohsin_alobaikan ' , imageUrl: 'https://th.bing.com/th/id/OIP.69K23qL_iWIJDIQR2I-L6gHaFj?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالمحسن القاسم ' , audioUrl: 'https://backup.qurango.net/radio/abdulmohsen_alqasim ' , imageUrl: 'https://th.bing.com/th/id/OIP.Dp0BcSBYFaIb4-Gx1wuYZgHaFj?rs=1&pid=ImgDetMain' },
+        { name: ' عبدالهادي أحمد كناكري ' , audioUrl: 'https://backup.qurango.net/radio/abdulhadi_kanakeri ' , imageUrl: 'https://4.bp.blogspot.com/-uEqWp2ehGfM/V0mGk2RFqJI/AAAAAAAAIFU/fSGD3J0B_wUMVUaQAdYoji0mUGWhZ0R0ACLcB/s400/4.jpg' },
+        { name: ' عبدالودود حنيف ' , audioUrl: 'https://backup.qurango.net/radio/abdulwadood_haneef ' , imageUrl: 'https://th.bing.com/th/id/R.5ffdc645ccc9959de701a7753890b7b9?rik=9qLlfyOzppe3zA&riu=http%3a%2f%2fwww.assajda.com%2fmedia%2fperson%2fsquare%2fabdul-wadud-haneef.jpg&ehk=s%2bpLzXc7dgSk2YV4EDpq64YQJ3hNipBJQLN7RRVqA3w%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' علي بن عبدالرحمن الحذيفي ' , audioUrl: 'https://backup.qurango.net/radio/ali_alhuthaifi ' , imageUrl: 'https://th.bing.com/th/id/OIP.Vj9o-9MT1ciOUoZJF3thIwHaEK?rs=1&pid=ImgDetMain' },
+        { name: ' ماجد الزامل ' , audioUrl: 'https://backup.qurango.net/radio/majed_alzamel ' , imageUrl: 'https://th.bing.com/th/id/OIP.dElxStCZvOiOeYp099bvjgHaHw?rs=1&pid=ImgDetMain' },
+        { name: ' محمد أيوب  ' , audioUrl: 'https://backup.qurango.net/radio/ayyoub2 ' , imageUrl: 'https://www.almowaten.net/wp-content/uploads/image-30.png' },
+        { name: ' محمد عثمان خان ' , audioUrl: 'https://backup.qurango.net/radio/mohammed_osman_khan ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%85%D8%AD%D9%85%D8%AF%20%D8%B9%D8%AB%D9%85%D8%A7%D9%86%20%D8%AE%D8%A7%D9%86.jpg' },
+        { name: ' ناصر العصفور ' , audioUrl: 'https://backup.qurango.net/radio/nasser_alosfor ' , imageUrl: 'https://th.bing.com/th/id/R.cd8f07fb1ba27817a87bb03dc7eb7a15?rik=oV8wHx1KoNtT1g&riu=http%3a%2f%2fmedia.alwasatnews.com%2fdata%2f2016%2f4976%2fimages%2floc-4-1.jpg&ehk=KXdgtlOF7103pSbrPII73VzOweaSuCB%2fSDrs7YsiqFg%3d&risl=&pid=ImgRaw&r=0' },
+        { name: ' ناصر الماجد ' , audioUrl: 'https://backup.qurango.net/radio/nasser_almajed ' , imageUrl: 'https://th.bing.com/th/id/OIP.AensW-FwcqJzcNwIbEku6wHaEK?rs=1&pid=ImgDetMain' },
+        { name: ' هيثم الجدعاني ' , audioUrl: 'https://backup.qurango.net/radio/hitham_aljadani ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%87%D9%8A%D8%AB%D9%85%20%D8%A7%D9%84%D8%AC%D8%B0%D8%B9%D8%A7%D9%86%D9%8A.jpg' },
+        { name: 'صالح الهبدان ' , audioUrl: 'https://backup.qurango.net/radio/saleh_alhabdan ' , imageUrl: 'https://th.bing.com/th/id/OIP.zM60CGdPcw0VFwRADKCfjwHaEK?rs=1&pid=ImgDetMain' },
+
+      ],
+
+      category4 :[
+        { name: ' الفاتح محمد الزبير ' , audioUrl: 'https://backup.qurango.net/radio/alfateh_alzubair ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%A7%D9%84%D9%81%D8%A7%D8%AA%D8%AD%20%D9%85%D8%AD%D9%85%D8%AF%20%D8%A7%D9%84%D8%B2%D8%A8%D9%8A%D8%B1.jpg' },
+        { name: ' مفتاح السلطني ' , audioUrl: 'https://backup.qurango.net/radio/muftah_alsaltany_aldori_an_abi_amr ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%84%D8%B7%D9%86%D9%8A.jpg' },
+
+      ],
+
+      category5 :[
+        { name: ' عبدالرشيد صوفي- السوسي عن أبي عمرو ' , audioUrl: 'https://backup.qurango.net/radio/abdulrasheed_soufi_assosi ' , imageUrl: 'data:image/jpeg;base64,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' },
+
+      ],
+
+      category6 :[
+        { name: 'محمد عبدالحكيم سعيد العبدالله ' , audioUrl: 'https://backup.qurango.net/radio/mohammad_alabdullah_albizi ' , imageUrl: 'https://ar.assabile.com/media/person/280x219/mohamed-abdel-hakim-saad-al-abdullah.png' },
+
+      ],
+
+      category7 :[
+        { name: 'محمد عبدالحكيم سعيد العبدالله ' , audioUrl: 'https://backup.qurango.net/radio/mohammad_alabdullah_aldorai ' , imageUrl: 'https://ar.assabile.com/media/person/280x219/mohamed-abdel-hakim-saad-al-abdullah.png' },
+        { name: ' محمود الشيمي ' , audioUrl: 'https://backup.qurango.net/radio/mahmood_alsheimy ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%85%D8%AD%D9%85%D9%88%D8%AF%20%D8%A7%D9%84%D8%B4%D9%8A%D9%85%D9%8A.jpg' },
+        { name: ' مفتاح السلطني ' , audioUrl: 'https://backup.qurango.net/radio/muftah_alsaltany_aldorai ' , imageUrl: 'data:image/jpeg;base64,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' },
+
+      ],
+
+      category8 :[
+        { name: 'مفتاح السلطني ' , audioUrl: 'https://backup.qurango.net/radio/muftah_alsaltany_ibn_thakwan_an_ibn_amr ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D9%85%D9%81%D8%AA%D8%A7%D8%AD%20%D8%A7%D9%84%D8%B3%D9%84%D8%B7%D9%86%D9%8A.jpg' },
+
+      ],
+
+      category9 :[
+        { name: 'ياسر المزروعي ' , audioUrl: 'https://backup.qurango.net/radio/yasser_almazroyee ' , imageUrl: 'https://ar.assabile.com/media/person/280x219/yasser-al-mazroyee.png' },
+
+      ],
+
+      category10 :[
+      { name: 'إذاعة عبدالرشيد صوفي- خلف عن حمزة ' , audioUrl: 'https://backup.qurango.net/radio/abdulrasheed_soufi_khalaf ' , imageUrl: 'https://tvquran.com/uploads/authors/images/%D8%B9%D8%A8%D8%AF%20%D8%A7%D9%84%D8%B1%D8%B4%D9%8A%D8%AF%20%D8%A8%D9%86%20%D8%B9%D9%84%D9%8A%20%D8%B5%D9%88%D9%81%D9%8A.jpg' },
+
+      ],
+
+
+
+    };
+
+    categorySelect.addEventListener('change', updateSelectedCategory);
+    readerSelect.addEventListener('change', updateSelectedReader);
+
+    function updateSelectedCategory() {
+      const selectedCategoryValue = categorySelect.value;
+      selectedCategory.textContent = "رواية: " + categorySelect.options[categorySelect.selectedIndex].text;
+
+      // تعبئة القائمة الثانية بناء على الصنف المختار
+      const readers = readersData[selectedCategoryValue];
+      readerSelect.innerHTML = '';
+      readers.forEach(reader => {
+        const option = document.createElement('option');
+        option.value = reader.audioUrl;
+        option.textContent = reader.name;
+        readerSelect.appendChild(option);
+      });
+
+      // عرض القارئ المختار
+      updateSelectedReader();
+    }
+
+    function updateSelectedReader() {
+      const selectedReaderIndex = readerSelect.selectedIndex;
+      if (selectedReaderIndex !== -1) {
+        const selectedReaderValue = readerSelect.value;
+        const readerData = readersData[categorySelect.value][selectedReaderIndex];
+        selectedReader.textContent = "إذاعة القارئ: " + readerData.name;
+        readerImage.src = readerData.imageUrl;
+        audioPlayer.src = selectedReaderValue;
+      }
+    }
+  </script>
+</body>
+</html>
